@@ -440,17 +440,17 @@ function sendResults() {
       + "<table border='1' cellpadding='6' style='border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px'>"
       + "<tr style='background:#3d6b35;color:#fff'><th align='left'>Вопрос</th><th align='left'>Выбрано</th><th align='left'>Правильно</th></tr>"
       + r.map((x, i) => {
-          const head = "№" + (i + 1) + " " + x.topic;
+          const head = "№" + (i + 1) + " " + x.topic + ". " + questions[i].text;
           return x.ok
             ? "<tr><td>" + head + "</td><td style='background:#e2f2d8'>" + x.chosen + "</td><td style='background:#e2f2d8'>" + x.correct + "</td></tr>"
             : "<tr><td>" + head + "</td><td style='background:#f9e2e2'>" + x.chosen + "</td><td style='background:#e2f2d8'>" + x.correct + "</td></tr>";
         }).join("")
       + "</table>" + "<p style='color:#888;font-size:12px'>Красным — ошибочные ответы ученика, зелёным — правильные.</p>",
     details: r.map((x, i) => {
-      const head = "Вопрос " + (i + 1) + " (" + x.topic + ")";
-      if (x.ok) return head + ": верно";
-      return head + ": ОШИБКА — выбрал: " + x.chosen + ". Правильно: " + x.correct;
-    }).join("\n")
+      const head = "Вопрос " + (i + 1) + " (" + x.topic + "): " + questions[i].text;
+      if (x.ok) return head + "\n  Ответ: ВЕРНО";
+      return head + "\n  Выбрано: " + x.chosen + "\n  Правильно: " + x.correct;
+    }).join("\n\n")
   };
   status.textContent = "Отправляю результат...";
   fetch(FORM_ENDPOINT, {
@@ -477,10 +477,10 @@ document.getElementById("mailBtn").addEventListener("click", () => {
   body += document.getElementById("verdict").innerText + "\n\n";
   body += "По темам:\n";
   r.forEach((x, i) => {
-    const head = "Вопрос " + (i + 1) + " (" + x.topic + ")";
+    const head = "Вопрос " + (i + 1) + " (" + x.topic + "): " + questions[i].text;
     body += x.ok
-      ? "+ " + head + ": верно\n"
-      : "- " + head + ": ОШИБКА — выбрал: " + x.chosen + ". Правильно: " + x.correct + "\n";
+      ? "+ " + head + "\n    Ответ: ВЕРНО\n"
+      : "- " + head + "\n    Выбрано: " + x.chosen + "\n    Правильно: " + x.correct + "\n";
   });
   body += "\nДля повторного прохождения откройте файл теста и нажмите «Пройти заново».";
   const url = "mailto:" + encodeURIComponent(email) +
