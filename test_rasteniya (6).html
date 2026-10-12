@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Тест: Корень, побег, лист</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    background: #f2f5ec;
+    color: #2b3a2a;
+    padding: 24px 12px;
+    line-height: 1.5;
+  }
+  .container { max-width: 780px; margin: 0 auto; }
+  header {
+    background: #3d6b35;
+    color: #fff;
+    border-radius: 14px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+  }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { opacity: .9; font-size: 15px; }
+  .rules {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 15px;
+    border: 1px solid #dfe6d8;
+  }
+  .rules li { margin-left: 18px; margin-top: 4px; }
+  .question {
+    background: #fff;
+    border: 1px solid #dfe6d8;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+  }
+  .q-topic {
+    display: inline-block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #3d6b35;
+    background: #e8f0e2;
+    border-radius: 20px;
+    padding: 3px 10px;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+  }
+  .q-text { font-size: 17px; font-weight: bold; margin-bottom: 12px; }
+  .q-hint { font-size: 13px; color: #7a8876; margin-bottom: 10px; font-style: italic; }
+  label.opt {
+    display: block;
+    padding: 9px 12px;
+    border: 1px solid #e2e8da;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background .15s, border-color .15s;
+  }
+  label.opt:hover { background: #f4f8ef; }
+  label.opt input { margin-right: 9px; accent-color: #3d6b35; }
+  label.correct { background: #e2f2d8 !important; border-color: #7ab55e !important; }
+  label.wrong { background: #f9e2e2 !important; border-color: #d17a7a !important; }
+  label.missed { background: #eaf3d9 !important; border-color: #9bbd6f !important; border-style: dashed; }
+  .expl {
+    display: none;
+    margin-top: 10px;
+    font-size: 14px;
+    background: #f4f8ef;
+    border-left: 3px solid #7ab55e;
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+  }
+  .btn-row { text-align: center; margin: 26px 0; }
+  #submitBtn, #resetBtn {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 34px;
+    cursor: pointer;
+  }
+  #submitBtn { background: #3d6b35; color: #fff; }
+  #submitBtn:hover { background: #2f5429; }
+  #resetBtn { background: #fff; color: #3d6b35; border: 1px solid #3d6b35; margin-left: 10px; }
+  #mailBtn { background: #d9e6d2; color: #2f5429; border: 1px solid #7ab55e; margin-left: 10px; }
+  #mailBtn:hover { background: #c9dcbc; }
+  .name-row {
+    background: #fff; border: 1px solid #dfe6d8; border-radius: 12px;
+    padding: 14px 20px; margin-bottom: 24px; font-size: 15px;
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  }
+  .name-row input {
+    flex: 1; min-width: 220px; padding: 8px 10px;
+    border: 1px solid #dfe6d8; border-radius: 8px; font-size: 15px; font-family: inherit;
+  }
+  #sendStatus { font-size: 14px; margin-top: 8px; color: #3d6b35; }
+  #result {
+    display: none;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 2px solid #7ab55e;
+  }
+  #result h2 { margin-bottom: 6px; }
+  .score-bar {
+    height: 14px; border-radius: 7px; background: #e7ece2; margin: 14px 0; overflow: hidden;
+  }
+  .score-fill { height: 100%; background: linear-gradient(90deg,#7ab55e,#3d6b35); width: 0; transition: width 1s; }
+  .verdict { font-size: 15px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Тест по биологии: корень, побег, лист</h1>
+    <p>Растительные ткани · устьица · корень и побег · видоизменения</p>
+  </header>
+
+  <div class="rules">
+    Тест содержит <b>18 вопросов</b>: в нечётных вопросах выберите <b>один</b> ответ, в чётных — <b>три</b>. После нажатия кнопки «Проверить» вы увидите баллы, правильные ответы и пояснения.
+  </div>
+
+  <div class="name-row">
+    <label for="studentName">Фамилия, имя, класс:</label>
+    <input type="text" id="studentName" placeholder="Например: Иванов Иван, 6А">
+  </div>
+
+  <form id="quiz"><div id="questions"></div>
+    <div class="btn-row">
+      <button type="button" id="submitBtn">Проверить ответы</button>
+      <button type="button" id="resetBtn" style="display:none">Пройти заново</button>
+      <button type="button" id="mailBtn" style="display:none">Отправить результат на почту</button>
+    </div>
+  </form>
+
+  <div id="result">
+    <h2>Результат</h2>
+    <div id="scoreLine"></div>
+    <div class="score-bar"><div class="score-fill" id="scoreFill"></div></div>
+    <div class="verdict" id="verdict"></div>
+    <div id="sendStatus"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    topic: "Растительные ткани", type: "single",
+    text: "Покровной тканью растения является:",
+    options: ["образовательная ткань (камбий)", "кожица листа", "проводящая ткань (сосуды)", "мякоть листа"],
+    correct: 1,
+    expl: "Кожица (эпидермис) — покровная ткань: она защищает растение и регулирует испарение."
+  },
+  {
+    topic: "Растительные ткани", type: "multi",
+    text: "Выберите растительные ткани:",
+    options: ["камбий (образовательная ткань)", "нервная ткань", "кожица (покровная ткань)", "мышечная ткань", "ситовидные трубки (проводящая ткань)", "кровяные клетки"],
+    correct: [0, 2, 4],
+    expl: "Нервная и мышечная ткани, а также кровь есть только у животных. У растений — образовательные, покровные, проводящие, механические и основные ткани."
+  },
+  {
+    topic: "Работа устьиц", type: "single",
+    text: "Устьице образовано:",
+    options: ["двумя замыкающими клетками", "клетками мякоти листа", "мёртвыми клетками пробки", "сосудами ксилемы"],
+    correct: 0,
+    expl: "Устьице — это щель между двумя замыкающими клетками; их работа открывает и закрывает устьичную щель."
+  },
+  {
+    topic: "Работа устьиц", type: "multi",
+    text: "Выберите верные утверждения о работе устьиц:",
+    options: [
+      "через устьица испаряется вода",
+      "через устьица происходит газообмен",
+      "при недостатке воды замыкающие клетки закрывают щель",
+      "устьица расположены внутри проводящего пучка",
+      "устьица образованы сосудами",
+      "устьица всегда открыты и никогда не закрываются"
+    ],
+    correct: [0, 1, 2],
+    expl: "Устьица находятся в кожице (эпидермисе) листа. Замыкающие клетки закрывают щель при нехватке воды, регулируя испарение и газообмен."
+  },
+  {
+    topic: "Зоны корня", type: "single",
+    text: "Зона всасывания корня покрыта:",
+    options: ["корневым чехликом", "корневыми волосками", "пробкой", "камбием"],
+    correct: 1,
+    expl: "Корневые волоски многократно увеличивают всасывающую поверхность корня. Чехлик покрывает лишь кончик корня и защищает зону деления."
+  },
+  {
+    topic: "Зоны корня", type: "multi",
+    text: "Какие зоны выделяют у корня?",
+    options: [
+      "зона деления",
+      "зона всасывания",
+      "зона проведения",
+      "зона фотосинтеза",
+      "зона опыления",
+      "зона испарения"
+    ],
+    correct: [0, 1, 2],
+    expl: "У корня выделяют зоны: деления, роста (растяжения), всасывания и проведения. Фотосинтез, опыление и испарение — функции других органов."
+  },
+  {
+    topic: "Типы корневых систем", type: "single",
+    text: "Какая корневая система характерна для пшеницы (злаков)?",
+    options: ["стержневая", "мочковатая", "ветвистая", "только главный корень без придаточных"],
+    correct: 1,
+    expl: "У злаков главный корень рано отмирает, и вся система состоит из пучка придаточных корней — это мочковатая корневая система."
+  },
+  {
+    topic: "Типы корневых систем", type: "multi",
+    text: "Выберите верные утверждения о типах корневых систем:",
+    options: [
+      "стержневая система имеет хорошо выраженный главный корень",
+      "у мочковатой системы главный корень рано прекращает рост или отмирает",
+      "мочковатая система характерна для однодольных растений",
+      "у стержневой системы все корни — придаточные",
+      "морковь имеет мочковатую корневую систему",
+      "стержневая система характерна для злаков"
+    ],
+    correct: [0, 1, 2],
+    expl: "Морковь и другие двудольные имеют стержневую систему с главным корнем. У злаков (однодольных) система мочковатая."
+  },
+  {
+    topic: "Видоизменения корня", type: "single",
+    text: "У георгина утолщённые запасающие корни называют:",
+    options: ["корнеплодами", "корневыми клубнями", "корневищами", "луковицами"],
+    correct: 1,
+    expl: "Корневые клубни (корневые шишки) — утолщения боковых и придаточных корней, запасающие питательные вещества (георгин, чистяк)."
+  },
+  {
+    topic: "Видоизменения корня", type: "multi",
+    text: "Выберите видоизменения корня:",
+    options: ["корнеплод", "корневой клубень", "корни-подпорки", "клубнелуковица", "корневище", "стеблевые колючки"],
+    correct: [0, 1, 2],
+    expl: "Корнеплод (морковь), корневые клубни (георгин) и корни-подпорки (фикус) — видоизменения корня. Корневище, клубнелуковица и колючки — видоизменения побега."
+  },
+  {
+    topic: "Строение и функции листа", type: "single",
+    text: "За фотосинтез в листе отвечает:",
+    options: ["покровная ткань (кожица)", "мякоть листа с хлоропластами", "механическая ткань", "пробка"],
+    correct: 1,
+    expl: "Клетки мякоти (хлоренхимы) листа содержат хлоропласты, в которых происходит фотосинтез."
+  },
+  {
+    topic: "Строение и функции листа", type: "multi",
+    text: "Выберите функции листа:",
+    options: [
+      "фотосинтез",
+      "газообмен",
+      "испарение воды",
+      "всасывание воды из почвы",
+      "закрепление растения в почве",
+      "снабжение корня органическими веществами через корневые волоски"
+    ],
+    correct: [0, 1, 2],
+    expl: "Всасывание воды и закрепление в почве — функции корня. Основные функции листа: фотосинтез, газообмен и испарение."
+  },
+  {
+    topic: "Внешнее строение побега", type: "single",
+    text: "Побегом называют:",
+    options: [
+      "стебель с расположенными на нём листьями и почками",
+      "только стебель без листьев",
+      "подземную часть растения",
+      "соцветие вместе с корнем"
+    ],
+    correct: 0,
+    expl: "Побег — стебель с листьями и почками. Участок стебля, от которого отходит лист, — узел, расстояние между узлами — междоузлие."
+  },
+  {
+    topic: "Внешнее строение побега", type: "multi",
+    text: "Выберите элементы внешнего строения побега:",
+    options: ["стебель", "узел", "междоузлие", "корневой чехлик", "корневые волоски", "эндосперм"],
+    correct: [0, 1, 2],
+    expl: "Стебель, узлы, междоузлия, листья и почки — части побега. Чехлик и волоски относятся к корню, эндосперм — к семени."
+  },
+  {
+    topic: "Видоизменённый наземный побег", type: "single",
+    text: "Усы земляники, на которых образуются новые розетки, — это видоизменённый:",
+    options: ["корень", "надземный побег", "лист", "цветоложе"],
+    correct: 1,
+    expl: "Усы (столоны) — ползучие надземные побеги, служащие для вегетативного размножения."
+  },
+  {
+    topic: "Видоизменённый наземный побег", type: "multi",
+    text: "Выберите видоизменения надземного побега:",
+    options: [
+      "усы земляники",
+      "усики винограда",
+      "колючки боярышника",
+      "корнеплод",
+      "корневые клубни",
+      "корни-прицепки плюща"
+    ],
+    correct: [0, 1, 2],
+    expl: "Усы, усики и стеблевые колючки — видоизменённые побеги. Корнеплоды и корневые клубни — видоизменения корня, корни-прицепки — видоизменённый корень."
+  },
+  {
+    topic: "Видоизменённый подземный побег", type: "single",
+    text: "Клубень картофеля — это видоизменённый:",
+    options: ["подземный побег", "корень", "лист", "плод"],
+    correct: 0,
+    expl: "Клубень — утолщённый подземный побег: на нём есть почки-«глазки», размещённые по спирали, как узлы на стебле."
+  },
+  {
+    topic: "Видоизменённый подземный побег", type: "multi",
+    text: "Выберите видоизменения подземного побега:",
+    options: ["корневище", "клубень", "луковица", "корнеплод", "корневые клубни", "усы земляники"],
+    correct: [0, 1, 2],
+    expl: "Корневище (ландыш), клубень (картофель) и луковица (лук) — видоизменённые подземные побеги. Корнеплод и корневые клубни — видоизменения корня."
+  }
+];
+
+const container = document.getElementById("questions");
+let html = "";
+questions.forEach((q, i) => {
+  html += `<div class="question" data-idx="${i}">`;
+  html += `<span class="q-topic">${q.topic}</span>`;
+  html += `<div class="q-text">${i + 1}. ${q.text}</div>`;
+  html += q.type === "multi"
+    ? `<div class="q-hint">Выберите три правильных ответа</div>`
+    : `<div class="q-hint">Выберите один правильный ответ</div>`;
+  q.options.forEach((opt, j) => {
+    const inputType = q.type === "multi" ? "checkbox" : "radio";
+    html += `<label class="opt" data-q="${i}" data-o="${j}">
+      <input type="${inputType}" name="q${i}" value="${j}"> ${opt}</label>`;
+  });
+  html += `<div class="expl" id="expl${i}"></div></div>`;
+});
+container.innerHTML = html;
+
+// ограничение: в multi-вопросах не больше 3 галочек
+container.addEventListener("change", (e) => {
+  const label = e.target.closest("label.opt");
+  if (!label) return;
+  const qi = +label.dataset.q;
+  const q = questions[qi];
+  if (q.type === "multi") {
+    const checked = container.querySelectorAll(`input[name=q${qi}]:checked`);
+    if (checked.length > 3) {
+      e.target.checked = false;
+    }
+  }
+});
+
+document.getElementById("submitBtn").addEventListener("click", () => {
+  let score = 0;
+  questions.forEach((q, i) => {
+    const block = container.querySelector(`[data-idx="${i}"]`);
+    const chosen = [...block.querySelectorAll("input:checked")].map(inp => +inp.value);
+    const labels = [...block.querySelectorAll("label.opt")];
+    const expl = block.querySelector(".expl");
+    let ok;
+    if (q.type === "single") {
+      ok = chosen.length === 1 && chosen[0] === q.correct;
+      labels.forEach((l, j) => {
+        if (j === q.correct) l.classList.add("correct");
+        else if (chosen.includes(j)) l.classList.add("wrong");
+      });
+    } else {
+      const c = q.correct;
+      ok = chosen.length === c.length && c.every(x => chosen.includes(x));
+      labels.forEach((l, j) => {
+        if (c.includes(j) && chosen.includes(j)) l.classList.add("correct");
+        else if (c.includes(j) && !chosen.includes(j)) l.classList.add("missed");
+        else if (!c.includes(j) && chosen.includes(j)) l.classList.add("wrong");
+      });
+    }
+    if (ok) score++;
+    expl.textContent = (ok ? "Верно. " : "Правильный ответ отмечен зелёным. ") + q.expl;
+    expl.style.display = "block";
+    labels.forEach(l => l.style.pointerEvents = "none");
+  });
+
+  const pct = Math.round(score / questions.length * 100);
+  document.getElementById("scoreLine").innerHTML = `<b>${score} из ${questions.length}</b> (${pct}%)`;
+  document.getElementById("scoreFill").style.width = pct + "%";
+  let verdict;
+  if (pct >= 90) verdict = "Отлично! Материал усвоен прочно.";
+  else if (pct >= 70) verdict = "Хорошо! Осталось повторить отдельные темы.";
+  else if (pct >= 50) verdict = "Удовлетворительно. Стоит вернуться к конспекту.";
+  else verdict = "Материал нужно повторить. Пройдите тест снова — правильные ответы уже отмечены.";
+  document.getElementById("verdict").textContent = verdict;
+  document.getElementById("result").style.display = "block";
+  document.getElementById("resetBtn").style.display = "inline-block";
+  document.getElementById("mailBtn").style.display = "inline-block";
+  document.getElementById("submitBtn").disabled = true;
+  document.getElementById("submitBtn").style.opacity = ".5";
+  window.lastResults = questions.map((q, i) => {
+    const block = container.querySelector(`[data-idx="${i}"]`);
+    const chosen = [...block.querySelectorAll("input:checked")].map(inp => +inp.value);
+    let ok;
+    if (q.type === "single") ok = chosen.length === 1 && chosen[0] === q.correct;
+    else ok = chosen.length === q.correct.length && q.correct.every(x => chosen.includes(x));
+    const label = (idx) => q.options[idx];
+    return {
+      topic: q.topic,
+      ok,
+      chosen: chosen.length ? chosen.map(label).join("; ") : "(ответ не выбран)",
+      correct: (q.type === "single" ? [q.correct] : q.correct).map(label).join("; ")
+    };
+  });
+  window.studentName = document.getElementById("studentName").value.trim();
+  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+  sendResults();
+});
+
+// === Настройка почты ===
+// 1) TEACHER_EMAIL — адрес для кнопки «Отправить результат на почту».
+//    Письмо формируется в почтовой программе ученика, отправляет его он сам.
+// 2) FORM_ENDPOINT — адрес формы из сервиса Formspree (или аналога).
+//    Впишите сюда https://formspree.io/f/XXXXXX — и результат будет
+//    отправляться учителю автоматически, сразу после проверки теста.
+//    Пока строка пустая, автосохранение выключено.
+const TEACHER_EMAIL = "";
+const FORM_ENDPOINT = "https://formspree.io/f/xljglkka";
+
+function sendResults() {
+  const status = document.getElementById("sendStatus");
+  if (!FORM_ENDPOINT) return;
+  const r = window.lastResults || [];
+  const payload = {
+    _subject: "Результат теста: " + (window.studentName || "без имени"),
+    student: window.studentName || "",
+    date: new Date().toLocaleString("ru-RU"),
+    score: document.getElementById("scoreLine").innerText,
+    verdict: document.getElementById("verdict").innerText,
+    html_report: "<h3>Результат: " + document.getElementById("scoreLine").innerText + "</h3>"
+      + "<p>" + document.getElementById("verdict").innerText + "</p>"
+      + "<table border='1' cellpadding='6' style='border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px'>"
+      + "<tr style='background:#3d6b35;color:#fff'><th align='left'>Вопрос</th><th align='left'>Выбрано</th><th align='left'>Правильно</th></tr>"
+      + r.map((x, i) => {
+          const head = "№" + (i + 1) + " " + x.topic;
+          return x.ok
+            ? "<tr><td>" + head + "</td><td style='background:#e2f2d8'>" + x.chosen + "</td><td style='background:#e2f2d8'>" + x.correct + "</td></tr>"
+            : "<tr><td>" + head + "</td><td style='background:#f9e2e2'>" + x.chosen + "</td><td style='background:#e2f2d8'>" + x.correct + "</td></tr>";
+        }).join("")
+      + "</table>" + "<p style='color:#888;font-size:12px'>Красным — ошибочные ответы ученика, зелёным — правильные.</p>",
+    details: r.map((x, i) => {
+      const head = "Вопрос " + (i + 1) + " (" + x.topic + ")";
+      if (x.ok) return head + ": верно";
+      return head + ": ОШИБКА — выбрал: " + x.chosen + ". Правильно: " + x.correct;
+    }).join("\n")
+  };
+  status.textContent = "Отправляю результат...";
+  fetch(FORM_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(resp => {
+    if (resp.ok) status.textContent = "Результат отправлен учителю ✓";
+    else status.textContent = "Не удалось отправить результат: проверьте адрес FORM_ENDPOINT.";
+  }).catch(() => {
+    status.textContent = "Не удалось отправить результат (нет связи). Можно отправить кнопкой «Отправить результат на почту».";
+  });
+}
+
+document.getElementById("mailBtn").addEventListener("click", () => {
+  let email = TEACHER_EMAIL;
+  if (!email) email = prompt("Укажите адрес, на который отправить результат:");
+  if (!email) return;
+  const r = window.lastResults || [];
+  let body = "Результаты теста по биологии (корень, побег, лист)\n";
+  body += "Ученик: " + (window.studentName || "(не указано)") + "\n";
+  body += "Дата: " + new Date().toLocaleString("ru-RU") + "\n";
+  body += "Итог: " + document.getElementById("scoreLine").innerText + "\n";
+  body += document.getElementById("verdict").innerText + "\n\n";
+  body += "По темам:\n";
+  r.forEach((x, i) => {
+    const head = "Вопрос " + (i + 1) + " (" + x.topic + ")";
+    body += x.ok
+      ? "+ " + head + ": верно\n"
+      : "- " + head + ": ОШИБКА — выбрал: " + x.chosen + ". Правильно: " + x.correct + "\n";
+  });
+  body += "\nДля повторного прохождения откройте файл теста и нажмите «Пройти заново».";
+  const url = "mailto:" + encodeURIComponent(email) +
+    "?subject=" + encodeURIComponent("Результаты теста по биологии") +
+    "&body=" + encodeURIComponent(body);
+  window.location.href = url;
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.querySelectorAll("input").forEach(i => i.checked = false);
+  document.querySelectorAll("label.opt").forEach(l => l.classList.remove("correct", "wrong", "missed"));
+  document.querySelectorAll(".expl").forEach(e => e.style.display = "none");
+  document.getElementById("result").style.display = "none";
+  document.getElementById("resetBtn").style.display = "none";
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = false;
+  btn.style.opacity = "1";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+</body>
+</html>
